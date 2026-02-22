@@ -119,9 +119,20 @@ function renderCavern(){
       else{
         const crystal=crystals.find(c=>c.x===x && c.y===y);
         if(crystal){
-          if(crystal.type==='crystal'){ cell.textContent='💎'; cell.classList.add('crystal'); cell.addEventListener('click',()=>collectCrystal(crystal)); }
-          else if(crystal.type==='mirror'){ cell.textContent='🪞'; cell.classList.add('mirror'); cell.addEventListener('click',()=>shootBeam(crystal)); }
-          else if(crystal.type==='secret'){ cell.textContent='🔮'; cell.classList.add('secret'); }
+          if(crystal.type==='crystal'){ 
+            cell.textContent='💎'; 
+            cell.classList.add('crystal'); 
+            cell.onclick=()=>collectCrystal(crystal);
+          }
+          else if(crystal.type==='mirror'){ 
+            cell.textContent='🪞'; 
+            cell.classList.add('mirror'); 
+            cell.onclick=()=>shootBeam(crystal);
+          }
+          else if(crystal.type==='secret'){ 
+            cell.textContent='🔮'; 
+            cell.classList.add('secret'); 
+          }
         } else {
           if(pathChar==='#'){ cell.classList.add('wall'); }
           else if(pathChar==='S'){ cell.classList.add('start'); }
@@ -135,14 +146,21 @@ function renderCavern(){
   document.getElementById('inventory').textContent = inventory.length?inventory.join(', '):'None';
 }
 
-// Collect crystals
+// Only crystals disappear; mirrors stay
 function collectCrystal(crystal){
+  if(crystal.type === 'mirror') return; // mirrors never disappear
   if(!inventory.includes(crystal.name)){
     inventory.push(crystal.name);
     if(crystal.message) alert(`✨ ${crystal.message}`);
-    // Teleport glitch for fun
-    if(Math.random()<0.3){ crystal.x=Math.floor(Math.random()*5)+1; crystal.y=Math.floor(Math.random()*4)+1; createParticle(crystal.x*60+30,crystal.y*60+30); alert(`⚡ ${crystal.name} glitched!`); }
-    else{ crystal.x=-1; crystal.y=-1; }
+    if(Math.random()<0.3){ 
+      crystal.x=Math.floor(Math.random()*5)+1; 
+      crystal.y=Math.floor(Math.random()*4)+1; 
+      createParticle(crystal.x*60+30,crystal.y*60+30); 
+      alert(`⚡ ${crystal.name} glitched!`);
+    } else { 
+      crystal.x=-1; 
+      crystal.y=-1; 
+    }
     renderCavern();
   }
 }
@@ -160,7 +178,14 @@ function shootBeam(mirror){
     document.body.appendChild(beam);
     setTimeout(()=>beam.remove(),300);
     const target=crystals.find(c=>c.x===x&&c.y===y&&c.type==='secret');
-    if(target){ inventory.push(target.name); alert(`💛 ${target.message}`); target.x=-1; target.y=-1; renderCavern(); clearInterval(beamInterval); }
+    if(target){ 
+      inventory.push(target.name); 
+      alert(`💛 ${target.message}`); 
+      target.x=-1; 
+      target.y=-1; 
+      renderCavern(); 
+      clearInterval(beamInterval); 
+    }
   },100);
 }
 
@@ -181,6 +206,43 @@ function createParticle(x,y){
   document.body.appendChild(p); setTimeout(()=>p.remove(),3000);
 }
 setInterval(()=>{ createParticle(Math.random()*window.innerWidth,Math.random()*window.innerHeight); },500);
+
+// How to Play Overlay
+window.addEventListener('load', ()=>{
+  const overlay = document.createElement('div');
+  overlay.style.position='fixed';
+  overlay.style.top='0';
+  overlay.style.left='0';
+  overlay.style.width='100vw';
+  overlay.style.height='100vh';
+  overlay.style.backgroundColor='rgba(0,0,0,0.9)';
+  overlay.style.color='white';
+  overlay.style.display='flex';
+  overlay.style.flexDirection='column';
+  overlay.style.justifyContent='center';
+  overlay.style.alignItems='center';
+  overlay.style.zIndex='9999';
+  overlay.style.textAlign='center';
+  overlay.style.padding='20px';
+
+  overlay.innerHTML = `
+    <h2>✨ How to Play Crystal Cavern ✨</h2>
+    <p>Use your <b>arrow keys</b> to move your character 🧍</p>
+    <p>Click on <span style="color:#0ff;">💎 Crystals</span> to collect them!</p>
+    <p>Click on <span style="color:#f0f;">🪞 Mirrors</span> to shoot a magical beam</p>
+    <p>The beam can hit hidden treasures like <span style="color:#ff0;">🔮 Secret Prism</span></p>
+    <p>Collect all treasures to complete the cavern!</p>
+    <button id="closeOverlay" style="
+      margin-top:20px; padding:12px 24px; border:none; border-radius:20px; background:#ba55d3; color:white; cursor:pointer;
+    ">Start Adventure →</button>
+  `;
+
+  document.body.appendChild(overlay);
+
+  document.getElementById('closeOverlay').onclick = ()=>{
+    overlay.remove();
+  };
+});
 
 renderCavern();
 </script>
