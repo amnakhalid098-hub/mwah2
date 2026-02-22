@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whispering Woods Reward</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0c0c0c;
+  font-family:'Comic Sans MS', cursive;
+  text-align:center;
+  color:#eee;
+}
+
+/* reward card */
+.card{
+  background:rgba(0,0,0,0.85);
+  padding:40px 50px;
+  border-radius:20px;
+  box-shadow:0 0 30px rgba(0,255,200,0.4);
+  animation:fadeIn 1.2s ease;
+}
+
+/* treasure icon */
+.treasure{
+  font-size:5rem;
+  margin:15px 0;
+  animation:pop 1s ease;
+}
+
+/* button */
+button{
+  margin-top:25px;
+  padding:12px 28px;
+  border:none;
+  border-radius:25px;
+  font-size:1rem;
+  background:linear-gradient(45deg,#00ffc0,#00a896);
+  color:white;
+  cursor:pointer;
+  transition:.3s;
+}
+
+button:hover{
+  transform:scale(1.07);
+  box-shadow:0 0 15px #00ffc0;
+}
+
+/* animations */
+@keyframes pop{
+  0%{transform:scale(0) rotate(180deg); opacity:0;}
+  100%{transform:scale(1) rotate(0); opacity:1;}
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(30px);}
+  to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div>The shadows guide you forward… 🌌</div>
+
+  <div class="treasure">🗝️</div>
+
+  <b>Ancient Key of the Woods</b>
+  <p>A reward for those who explore the hidden paths and notice the secrets among the trees.</p>
+
+  <button onclick="goNext()">Continue the Hunt →</button>
+
+</div>
+
+<script>
+function goNext(){
+  window.location.href="riddle_woods.html";
+}
+</script>
+
+</body>
+</html>
+
