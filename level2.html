@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dream Treasure Hunt</title>
+
+<style>
+  body {
+    margin: 0;
+    background: #fce4f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: #555;
+    font-family: 'Comic Sans MS', cursive;
+  }
+
+  .page {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    max-width: 600px;
+    margin: auto;
+  }
+
+  .active {
+    display: flex;
+  }
+
+  .typing-text {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  button {
+    padding: 0.7rem 1.5rem;
+    font-size: 1.2rem;
+    border: none;
+    background-color: #ffd1dc;
+    color: #333;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background-color: #ffb6c1;
+  }
+
+  .doodle {
+    width:150px;
+    margin-bottom:15px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Intro Page -->
+<div id="level1" class="page active">
+  <img src="cat.png" class="doodle">
+  <p class="typing-text" id="level1Text"></p>
+  <button id="toWarmup" style="display:none;">→ Next</button>
+</div>
+
+<!-- Warm-up Page -->
+<div id="warmup" class="page">
+  <img src="smirking.png" class="doodle">
+  <p class="typing-text" id="warmupText"></p>
+  <button id="toFlowerField" style="display:none;">→ Continue Journey</button>
+</div>
+<script>
+// ===== Intro typing =====
+const level1Message = "A hidden treasure exists… only one person was meant to find it…";
+const level1Text = document.getElementById('level1Text');
+const toWarmupBtn = document.getElementById('toWarmup');
+let i1 = 0;
+
+function typeLevel1() {
+  if(i1 < level1Message.length){
+    level1Text.innerHTML += level1Message.charAt(i1);
+    i1++;
+    setTimeout(typeLevel1, 50);
+  } else {
+    toWarmupBtn.style.display = 'inline-block';
+  }
+}
+
+// ===== Warmup typing =====
+const warmupMessage = "Nice work finding the first clue… but that was just a warm-up. The real adventure begins now… ready?";
+const warmupText = document.getElementById('warmupText');
+const toFlowerFieldBtn = document.getElementById('toFlowerField');
+let i2 = 0;
+
+function typeWarmup() {
+  warmupText.innerHTML = "";
+  function type() {
+    if(i2 < warmupMessage.length){
+      warmupText.innerHTML += warmupMessage.charAt(i2);
+      i2++;
+      setTimeout(type, 50);
+    } else {
+      toFlowerFieldBtn.style.display = 'inline-block';
+    }
+  }
+  type();
+}
+
+// ===== Button Listeners =====
+toWarmupBtn.addEventListener('click', () => {
+  document.getElementById('level1').classList.remove('active');
+  document.getElementById('warmup').classList.add('active');
+  typeWarmup();
+});
+
+toFlowerFieldBtn.addEventListener('click', () => {
+  document.body.style.transition = "opacity 0.8s";
+  document.body.style.opacity = 0;
+  setTimeout(() => {
+    window.location.href = "flower_field.html";
+  }, 800);
+});
+
+// ===== Start typing intro immediately =====
+typeLevel1();
+</script>
+</body>
+</html>
