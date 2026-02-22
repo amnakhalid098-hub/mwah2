@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tiny Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+<style>
+/* BACKGROUND */
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Shadows Into Light', cursive;
+  background: linear-gradient(
+    135deg,
+    #f8d7da,
+    #f5c2c7,
+    #eeb4bb,
+    #e4a1aa
+  );
+  background-size:400% 400%;
+  animation:bgMove 12s ease infinite;
+}
+@keyframes bgMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+/* CARD */
+.container{
+  text-align:center;
+  max-width:600px;
+  padding:30px;
+  border-radius:25px;
+  background:rgba(255,255,255,.35);
+  backdrop-filter:blur(14px);
+  box-shadow:0 10px 40px rgba(0,0,0,.15);
+  opacity:0;
+  transform:translateY(40px) scale(.95);
+  animation:enter 1.3s ease forwards;
+}
+@keyframes enter{
+  to{opacity:1; transform:translateY(0) scale(1);}
+}
+/* CAT */
+.cat{
+  width:120px;
+  margin-bottom:20px;
+  opacity:0;
+  transform:translateY(15px);
+  animation:enter 1.6s ease forwards .4s;
+}
+/* TEXT */
+h1{
+  font-size:26px;
+  color:#3a3a3a;
+}
+p{
+  font-size:18px;
+  color:#444;
+  line-height:1.5;
+  margin-top:20px;
+  min-height:90px;
+}
+/* BUTTON */
+.btn{
+  margin-top:25px;
+  padding:13px 28px;
+  font-size:18px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  background:linear-gradient(135deg,#f3a6ad,#e38f98);
+  color:white;
+  box-shadow:0 5px 15px rgba(0,0,0,.15);
+  transition:.25s;
+}
+.btn:hover{
+  transform:scale(1.12) rotate(-2deg);
+}
+/* LOADING SCREEN */
+.loading{
+  position:fixed;
+  inset:0;
+  background:#ffdfe6;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  font-size:28px;
+  color:#444;
+  z-index:999;
+  opacity:0;
+  pointer-events:none;
+  transition:.4s;
+}
+.loading.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.dot{
+  animation:blink 1s infinite;
+}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{
+  0%,100%{opacity:.2}
+  50%{opacity:1}
+}
+/* ACCESS GRANTED */
+.granted{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+  opacity:0;
+  pointer-events:none;
+  transition:.4s;
+}
+.granted.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.grantText{
+  color:#00ff9d;
+  font-size:50px;
+  letter-spacing:5px;
+  text-shadow:0 0 15px #00ff9d, 0 0 40px #00ff9d;
+  animation:flicker .15s infinite alternate;
+}
+@keyframes flicker{
+  from{opacity:.7}
+  to{opacity:1}
+}
+</style>
+</head>
+<body>
+<!-- LOADING -->
+<div id="loading" class="loading">
+  adventure loading
+  <div>
+    <span class="dot">.</span>
+    <span class="dot">.</span>
+    <span class="dot">.</span>
+  </div>
+</div>
+<!-- ACCESS SCREEN -->
+<div id="grantedScreen" class="granted">
+  <div class="grantText">ACCESS GRANTED</div>
+</div>
+<!-- CARD -->
+<div class="container">
+<img src="dramaticCat.png" class="cat">
+<h1>Heyooo meri choti si pagal bacchi 💋😋</h1>
+<p id="text"></p>
+<!-- UPDATED BUTTON -->
+<button class="btn" onclick="goToLevel1()">click me, if u dare 👅</button>
+</div>
+<script>
+/* typing text */
+const message = `welcome to your very own tiny adventure. honestly, i doubt you’ll survive even the first click without whining ble👅, but sure… lets see if you can somehow find the treasures without completely messing it up👺 dont worry, i will be here to roll my eyes at every wrong choice buhahaha👽`;
+let i=0;
+function type(){
+  if(i<message.length){
+    document.getElementById("text").innerHTML += message.charAt(i);
+    i++;
+    setTimeout(type,25);
+  }
+}
+type();
+
+/* correct button now navigates to Level 1 */
+function goToLevel1(){
+  let load=document.getElementById("loading");
+  let grant=document.getElementById("grantedScreen");
+  // keep your loading + access granted animations intact
+  load.classList.add("show");
+  setTimeout(()=>{
+    load.classList.remove("show");
+    grant.classList.add("show");
+  },2200);
+  setTimeout(()=>{
+    grant.classList.remove("show");
+    // Navigate to Level 1 HTML file
+    window.location.href = "level1.html"; // <-- replace with your actual Level 1 file name
+  },4500);
+}
+</script>
+</body>
+</html>
