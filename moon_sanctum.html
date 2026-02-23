@@ -16,7 +16,6 @@ body{
   overflow:hidden;
 }
 
-/* overlay messages */
 #screen{
   position:fixed;
   top:0; left:0;
@@ -33,7 +32,6 @@ body{
   transition:1s;
 }
 
-/* board grid */
 #board{
   display:grid;
   grid-template-columns:repeat(4,80px);
@@ -42,9 +40,10 @@ body{
   opacity:0;
   transform:scale(0.7);
   transition:1s;
+  z-index:1;
+  position:relative;
 }
 
-/* tiles */
 .tile{
   width:80px; height:80px;
   background:rgba(30,0,50,0.6);
@@ -63,7 +62,6 @@ body{
   box-shadow:0 0 15px #a855f7;
 }
 
-/* glowing animation for sequence */
 .glow{
   animation:flash 0.6s ease;
   background:rgba(168,85,247,0.5);
@@ -87,19 +85,10 @@ let tiles=[];
 let sequence=[];
 let playerSequence=[];
 let gameOver=false;
-let failStreak=0; // consecutive failures
+let failStreak=0;
 let boardSize=16;
-
-/* intro animation */
-setTimeout(()=>{
-  document.getElementById("screen").style.opacity="0";
-  setTimeout(()=>{
-    document.getElementById("screen").remove();
-    board.style.opacity="1";
-    board.style.transform="scale(1)";
-    startRound();
-  },1000);
-},1500);
+let runes=[]; // indexes of tiles with runes
+let collectedRunes=[];
 
 /* create board */
 for(let i=0;i<boardSize;i++){
@@ -110,12 +99,36 @@ for(let i=0;i<boardSize;i++){
   tiles.push(t);
 }
 
-/* start a new round */
+/* randomly assign 3 runes per round */
+function assignRunes(){
+  runes = [];
+  collectedRunes = [];
+  let empty=Array.from({length:boardSize},(_,i)=>i);
+  for(let i=0;i<3;i++){
+    let idx=Math.floor(Math.random()*empty.length);
+    runes.push(empty[idx]);
+    empty.splice(idx,1);
+  }
+}
+
+/* intro animation */
+setTimeout(()=>{
+  let overlay = document.getElementById("screen");
+  overlay.style.opacity="0";
+  setTimeout(()=>{
+    overlay.remove();
+    board.style.opacity="1";
+    board.style.transform="scale(1)";
+    startRound();
+  },1000);
+},1500);
+
 function startRound(){
   gameOver=false;
   playerSequence=[];
   sequence=[];
-  generateSequence(4); // sequence length
+  assignRunes();
+  generateSequence(4);
   playSequence();
 }
 
@@ -129,7 +142,6 @@ function generateSequence(len){
   }
 }
 
-/* animate sequence */
 function playSequence(){
   let delay=0;
   sequence.forEach((i,index)=>{
@@ -141,14 +153,21 @@ function playSequence(){
   });
 }
 
-/* handle player clicks */
+/* player clicks */
 function playerClick(i){
   if(gameOver) return;
+
   tiles[i].classList.add("glow");
   setTimeout(()=>tiles[i].classList.remove("glow"),300);
+
+  // collect rune if present
+  if(runes.includes(i) && !collectedRunes.includes(i)){
+    collectedRunes.push(i);
+    tiles[i].innerHTML="✨";
+  }
+
   playerSequence.push(i);
 
-  // check sequence so far
   for(let j=0;j<playerSequence.length;j++){
     if(playerSequence[j]!==sequence[j]){
       handleFail();
@@ -156,34 +175,61 @@ function playerClick(i){
     }
   }
 
-  // full correct sequence
   if(playerSequence.length===sequence.length){
     handleWin();
   }
 }
 
-/* handle success */
+/* success */
 function handleWin(){
   gameOver=true;
   failStreak=0;
-  showScreen("✦ The Moon Sanctum accepts your mind ✦", true);
+  let text="✦ The Moon Sanctum accepts your mind ✦";
+  if(collectedRunes.length===runes.length){
+    text += "<br>All runes collected! The sanctum fully opens!";
+  }
+  showScreen(text, true);
 }
 
-/* handle failure */
+/* failure + AI hint */
 function handleFail(){
   gameOver=true;
   failStreak++;
   
   if(failStreak>=3){
-    // MERCY MODE: guarantee success next round
-    showScreen("✦ The sigil senses your struggle… the path opens ✦", true, true);
+    showScreen("✦ The Ancient Watcher senses your struggle… the path opens ✦", true, true);
     failStreak=0;
-  }else{
-    showScreen("✦ The sigil remains unconvinced ✦");
+  } else {
+    showScreen("✦ The Ancient Watcher remains unconvinced ✦");
+    setTimeout(()=>{
+      if(failStreak<=2){
+        showAIHint();
+      }
+    },500);
   }
 }
 
-/* overlay messages with countdown to next area */
+/* AI Guardian randomized hint */
+function showAIHint(){
+  let remaining = sequence.slice(playerSequence.length);
+  if(remaining.length === 0) return;
+
+  let rand = Math.random();
+  let hintTile;
+
+  if(rand < 0.5){
+    hintTile = remaining[0]; // next correct tile
+  } else if(rand < 0.8){
+    hintTile = remaining[Math.floor(Math.random()*remaining.length)]; // random remaining
+  } else {
+    return; // 20% chance do nothing
+  }
+
+  tiles[hintTile].classList.add("glow");
+  setTimeout(()=>tiles[hintTile].classList.remove("glow"),600);
+}
+
+/* overlay + countdown */
 function showScreen(text,win=false,mercy=false){
   let s=document.createElement("div");
   s.id="screen";
@@ -192,7 +238,6 @@ function showScreen(text,win=false,mercy=false){
 
   if(win){
     if(mercy){
-      // auto-win sequence for mercy mode
       playerSequence = sequence.slice();
     }
 
@@ -203,11 +248,10 @@ function showScreen(text,win=false,mercy=false){
       if(countdownEl) countdownEl.innerHTML = "Next area opens in " + count;
       if(count <= 0){
         clearInterval(timer);
-        window.location.href = "next_location.html"; // <-- CHANGE this to your next page
+        window.location.href = "next_location.html"; 
       }
     },1000);
   } else {
-    // remove normal fail screen after 2s
     setTimeout(()=>{
       let old=document.getElementById("screen");
       if(old) old.remove();
