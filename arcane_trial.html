@@ -86,7 +86,7 @@ body{
 </head>
 <body>
 
-<div id="screen">✦ Only those who outwit the ancient sigil may pass ✦</div>
+<div id="screen">✦ Only those who outwit the ancient watcher may pass ✦</div>
 
 <div id="board"></div>
 
@@ -214,7 +214,7 @@ function end(win){
   gameOver=true;
   lossStreak=0; // reset streak on win
   setTimeout(()=>{
-    showScreen("✦ The seal recognizes your mind.<br>The path to the Moon Sanctum is now open. ✦",true);
+    showScreen("✦ The Ancient Watcher recognizes your mind.<br>The path to the Moon Sanctum is now open. ✦",true);
   },900);
 }
 
@@ -222,7 +222,7 @@ function lose(){
   gameOver=true;
   lossStreak++; // increase streak
   setTimeout(()=>{
-    showScreen("✦ The sigil remains unconvinced ✦");
+    showScreen("✦ The Ancient Watcher remains unconvinced ✦");
     reset();
   },900);
 }
