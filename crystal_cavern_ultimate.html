@@ -93,7 +93,7 @@ const paths=[
 ['#','S','.','.','#','.','#'],
 ['#','.','#','.','.','.','#'],
 ['#','.','.','#','.','.','#'],
-['#','#','.','D','.','E','#'],
+['#','#','.','D','#','E','#'],
 ['#','#','#','#','#','#','#']
 ];
 
@@ -228,6 +228,9 @@ setTimeout(()=>b.remove(),300);
 function unlockDoor(px,py){
 
 doorOpen=true;
+  setTimeout(()=>{
+alert("The cavern remembers your light…");
+},300);
 
 /* sparkle burst */
 for(let i=0;i<25;i++){
@@ -256,8 +259,12 @@ if(paths[ny]&&paths[ny][nx]&&paths[ny][nx]!=="#" && !(paths[ny][nx]==="D"&&!door
 player={x:nx,y:ny};
 
 if(paths[ny][nx]==="E"){
+
+alert("The crystal path accepts you.");
+
 document.body.style.transition="opacity 1s";
 document.body.style.opacity="0";
+
 setTimeout(()=>window.location.href="reward_cavern.html",1000);
 }
 
