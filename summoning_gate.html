@@ -1,1 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Threshold</title>
 
+<style>
+body{
+  margin:0;
+  background:black;
+  color:#d8b4fe;
+  font-family:Georgia, serif;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+/* center container */
+#scene{
+  text-align:center;
+  max-width:800px;
+  padding:40px;
+}
+
+/* glow text */
+.glow{
+  font-size:1.8rem;  /* reduced from 2.2rem */
+  color:#e9d5ff;
+  text-shadow:
+    0 0 10px #d946ef,
+    0 0 25px #c026d3,
+    0 0 50px #a21caf;
+  opacity:0;
+  transition:opacity 1.5s;
+}
+
+/* lore text */
+#lore{
+  font-size:1rem;  /* reduced from 1.25rem */
+  line-height:1.6;  /* slightly smaller spacing */
+  white-space:pre-line;
+  opacity:0;
+  transition:opacity 2s;
+}
+
+/* darken overlay */
+#fadeDark{
+  position:fixed;
+  inset:0;
+  background:black;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 3s;
+}
+</style>
+</head>
+<body>
+
+<div id="scene">
+  <div id="title" class="glow">✦ The path opens… ✦</div>
+  <div id="lore"></div>
+</div>
+
+<div id="fadeDark"></div>
+
+<script>
+const title = document.getElementById("title");
+const loreBox = document.getElementById("lore");
+const fadeDark = document.getElementById("fadeDark");
+
+/* LORE TEXT */
+const lines = [
+  "Long before you arrived, before your footsteps brushed the petals, before your voice stirred the silent woods…",
+  "this place already knew your name.",
+  "This realm is not a forest. Not a cavern. Not a dream.",
+  "It is a test.",
+  "The flowers did not bloom for beauty, they opened to witness you.",
+  "The crystals did not glow for light, they reflected your truth.",
+  "The paths did not appear by chance, they were placed beneath your feet.",
+  "You were not invited here.",
+  "You were summoned.",
+  "Not by accident. Not by fate.",
+  "But by a will older than the moon itself.",
+  "Something has watched you since your first step into this world.",
+  "Something that measures hearts the way scholars measure stars.",
+  "It does not speak.",
+  "It does not show its face.",
+  "It only observes.",
+  "And now… it is waiting to decide.",
+  "Because this realm has only one purpose:",
+  "To judge those who were meant to be found.",
+  "And you,",
+  "were meant to be found."
+];
+
+/* STAGE 1 — show glow text */
+setTimeout(()=>{
+  title.style.opacity=1;
+},300);
+
+/* after 1.5s fade to black */
+setTimeout(()=>{
+  fadeDark.style.opacity=1;
+},1800);
+
+/* hide title + start lore */
+setTimeout(()=>{
+  title.style.display="none";
+  fadeDark.style.opacity=0;
+  startLore();
+},3500);
+
+/* STAGE 2 — typing lore */
+function typeLine(text, i=0, speed=40){
+  return new Promise(resolve=>{
+    let interval=setInterval(()=>{
+      loreBox.textContent+=text[i];
+      i++;
+      if(i>=text.length){
+        clearInterval(interval);
+        loreBox.textContent+="\n";
+        setTimeout(resolve,700);
+      }
+    },speed);
+  });
+}
+
+async function startLore(){
+  loreBox.style.opacity=1;
+
+  for(let i=0;i<lines.length;i++){
+    let speed = 35 + Math.random()*15;
+    await typeLine(lines[i],0,speed);
+  }
+
+  /* final pause */
+  await new Promise(r=>setTimeout(r,2000));
+
+  /* darken screen slightly after lore */
+fadeDark.style.opacity=.45;
+
+/* go to next page after a short pause */
+setTimeout(() => {
+    window.location.href = "nextLevel.html"; // <-- replace with your actual next page
+}, 1500); // 1.5 seconds delay so she sees the dark overlay first
+</script>
+</body>
+</html>
