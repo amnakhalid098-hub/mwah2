@@ -60,54 +60,15 @@ box-shadow:0 0 15px rgba(0,0,0,0.2);
 z-index:100;
 }
 
-/* Inventory */
-#inventory{
-position:fixed;
-bottom:80px;
-left:50%;
-transform:translateX(-50%);
-display:none;
-gap:10px;
-z-index:20;
-}
-
-.slot{
-width:40px;
-height:40px;
-background:rgba(0,0,0,0.5);
-border:1px solid white;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-border-radius:5px;
-}
-
-/* backpack button */
-#invBtn{
-position:fixed;
-bottom:20px;
-right:20px;
-font-size:22px;
-padding:10px 14px;
-border:none;
-border-radius:50%;
-background:#ffb6d9;
-cursor:pointer;
-z-index:25;
-display:none;
-}
 </style>
 </head>
 <body>
 
 <div id="game-wrapper">
 <div id="instruction"></div>
-<div id="inventory"></div>
 </div>
 
 <div id="hint"></div>
-<button id="invBtn">🎒</button>
 
 <script>
 
@@ -135,25 +96,6 @@ const wrongTexts=[
 "Flower tricked you! Try again 🌺"
 ];
 
-/* inventory update */
-function updateInventory(){
-const inv=document.getElementById("inventory");
-inv.innerHTML="";
-
-for(let i=1;i<=7;i++){
-const s=document.createElement("div");
-s.className="slot";
-
-if(localStorage.getItem("reward"+i)){
-s.innerHTML="🌸";
-}else{
-s.innerHTML="🔒";
-}
-
-inv.appendChild(s);
-}
-}
-
 /* wrong click */
 function wrongFlower(){
 const h=document.getElementById("hint");
@@ -167,8 +109,6 @@ function correctFlower(){
 
 localStorage.setItem("reward1","yes");
 
-document.getElementById("invBtn").style.display="block";
-updateInventory();
 
 document.body.style.opacity=0;
 document.body.style.transition="1s";
@@ -203,18 +143,6 @@ f.style.top=pos[1]+"%";
 f.onclick=(i===correctIndex)?correctFlower:wrongFlower;
 wrapper.appendChild(f);
 });
-
-/* show inventory if already unlocked */
-if(localStorage.getItem("reward1")){
-document.getElementById("invBtn").style.display="block";
-updateInventory();
-}
-
-/* toggle inventory */
-document.getElementById("invBtn").onclick=()=>{
-const inv=document.getElementById("inventory");
-inv.style.display = inv.style.display==="flex" ? "none" : "flex";
-};
 
 /* instruction text */
 typeText(
