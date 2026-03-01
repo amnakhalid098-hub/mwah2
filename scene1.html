@@ -124,11 +124,7 @@ button:hover{
 <h1>THE BREATHING HALL</h1>
 
 <div id="riddle">
-I follow you in light,<br>
-I swallow you in dark.<br><br>
-I am shaped like you<br>
-Yet have no heart.<br><br>
-<b>What am I?</b>
+  What begins with T, ends with T, and has T in it?
 </div>
 
 <input id="answer" placeholder="type your answer...">
@@ -150,7 +146,7 @@ function check(){
   const val=document.getElementById("answer").value
       .toLowerCase().trim();
 
-  if(val==="shadow"){
+  if(val==="teapot"){
     const overlay=document.getElementById("overlay");
     overlay.style.opacity = "1";
     overlay.style.pointerEvents = "auto";
