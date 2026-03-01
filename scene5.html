@@ -129,11 +129,7 @@ button:hover{
 <h1>THE LAST DOOR</h1>
 
 <div id="riddle">
-I built this house.<br>
-I filled it with whispers.<br>
-I locked every door.<br>
-And I brought you here.<br><br>
-<b>What am I?</b>
+  What can you catch but not throw?
 </div>
 
 <input id="answer" placeholder="type your answer...">
@@ -159,7 +155,7 @@ function check(){
   const val=document.getElementById("answer").value
       .toLowerCase().trim();
 
-  if(val==="mind"){
+  if(val==="a cold"){
     const overlay=document.getElementById("overlay");
     overlay.style.opacity="1";
     overlay.style.pointerEvents="auto";
