@@ -33,6 +33,7 @@ justify-content:center;
 height:100vh;
 margin:0;
 overflow:hidden;
+touch-action: manipulation;
 }
 
 /* GRID */
@@ -298,11 +299,11 @@ render();
 
 </script>
   <div id="controls">
-  <button ontouchstart="move('up')">⬆</button>
+  <button onclick="move('up')">⬆</button>
   <div>
-    <button ontouchstart="move('left')">⬅</button>
-    <button ontouchstart="move('down')">⬇</button>
-    <button ontouchstart="move('right')">➡</button>
+    <button onclick="move('left')">⬅</button>
+    <button onclick="move('down')">⬇</button>
+    <button onclick="move('right')">➡</button>
   </div>
 </div>
 </body>
