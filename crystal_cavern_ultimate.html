@@ -5,6 +5,23 @@
 <title>Crystal Cavern Ultimate</title>
 
 <style>
+  #controls{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  z-index:999;
+}
+#controls button{
+  font-size:22px;
+  margin:6px;
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  background:#1b1738;
+  color:white;
+}
 body{
 background:#0b0c2a;
 color:white;
@@ -245,6 +262,15 @@ setTimeout(()=>s.remove(),1000);
 
 /* MOVEMENT */
 document.addEventListener("keydown",e=>{
+  function move(dir){
+ if(dir==="up") y-=10
+ if(dir==="down") y+=10
+ if(dir==="left") x-=10
+ if(dir==="right") x+=10
+
+ character.style.top=y+"px"
+ character.style.left=x+"px"
+}
 
 let nx=player.x;
 let ny=player.y;
@@ -276,5 +302,13 @@ render();
 render();
 
 </script>
+  <div id="controls">
+  <button ontouchstart="move('up')">⬆</button>
+  <div>
+    <button ontouchstart="move('left')">⬅</button>
+    <button ontouchstart="move('down')">⬇</button>
+    <button ontouchstart="move('right')">➡</button>
+  </div>
+</div>
 </body>
 </html>
